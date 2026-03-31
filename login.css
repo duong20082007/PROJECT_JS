@@ -1,0 +1,144 @@
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: 'Roboto', sans-serif; 
+}
+
+body.login-bg {
+    background-color: #221011;
+    background-position: center;
+    height: 100vh;
+    color: white;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 5%;
+    background: rgba(0,0,0,0.5);
+}
+
+.logo { 
+    font-size: 24px; 
+    font-weight: bold; 
+}
+.logo span { 
+    color: #e50914; 
+}
+
+.nav-menu a { 
+    color: #ccc; 
+    text-decoration: none; 
+    margin-left: 25px; 
+    font-size: 14px; 
+}
+.btn-login-nav { 
+    background: #e50914; 
+    color: white; 
+    border: none; 
+    padding: 8px 20px; 
+    border-radius: 5px; 
+    margin-left: 25px; 
+    cursor: pointer; 
+}
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 80px);
+}
+
+.login-card {
+    background: #111; 
+    padding: 40px;
+    border-radius: 15px;
+    width: 400px;
+    text-align: center;
+    position: relative;
+}
+
+.popcorn { 
+    width: 120px; 
+    margin-bottom: 20px;
+}
+
+h2 { 
+    font-size: 22px; 
+    margin-bottom: 30px; 
+}
+
+.input-group { 
+    text-align: left; 
+    margin-bottom: 20px; 
+}
+.input-group label { 
+    color: #ff4d00; 
+    font-size: 12px; 
+    display: block; 
+    margin-bottom: 5px; 
+}
+
+.input-box { 
+    position: relative; 
+}
+.input-box input {
+    width: 100%;
+    padding: 12px 15px;
+    background: #222;
+    border: 1px solid #444;
+    color: white;
+    border-radius: 8px;
+    outline: none;
+}
+.input-box input:focus { 
+    border-color: #ff4d00; 
+} 
+
+.input-box i { 
+    position: absolute; 
+    right: 15px; 
+    top: 50%; 
+    transform: translateY(-50%); 
+    color: #666; 
+}
+
+.options { 
+    display: flex; 
+    justify-content: space-between; 
+    font-size: 12px; 
+    color: #888; 
+    margin-bottom: 25px; 
+}
+.options a { 
+    color: #888; 
+    text-decoration: none; 
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    background: #e50914;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-text { 
+    margin-top: 20px; 
+    font-size: 13px; 
+    color: #888; 
+}
+.footer-text a { 
+    color: #e50914; 
+    text-decoration: none; 
+    font-weight: bold; 
+}
