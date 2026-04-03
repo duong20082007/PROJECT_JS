@@ -5,6 +5,18 @@ const movies = [
     { id: 4, title: "Mai", titleVi: "Mai", genres: "Tâm lý, Tình cảm", duration: 131, releasedDate: "10/02/2024", status: 0, posterUrl: "../assets/images/maii.png" },
     { id: 5, title: "Exhuma", titleVi: "Quật Mộ Trùng Ma", genres: "Kinh dị, Bí ẩn", duration: 134, releasedDate: "15/03/2024", status: 1, posterUrl: "../assets/images/Exhuma.webp" },
 ];
+const saveToLocal = () => {
+    localStorage.setItem("movies", JSON.stringify(movies));
+};
+
+const loadFromLocal = () => {
+    const data = localStorage.getItem("movies");
+    if (data) {
+        movies.length = 0; 
+        movies.push(...JSON.parse(data));
+    }
+};
+
 
 const renderMovies = (data) => {
     const tbody = document.getElementById('movieTableBody');
@@ -66,11 +78,12 @@ addMovieForm.addEventListener('submit', (e) => {
         duration: document.getElementById('movieDuration').value,
         releasedDate: document.getElementById('movieDate').value.split('-').reverse().join('/'),
         status: document.getElementById('movieStatus').value,
-        posterUrl: document.getElementById('moviePoster').value || '../assets/images/default.png',
+        posterUrl: document.getElementById('moviePoster').value ,
         ticketPrice: document.getElementById('moviePrice').value,
         description: document.getElementById('movieDesc').value
     };
     movies.unshift(newMovie);
+    saveToLocal();
     renderMovies(movies);
     addMovieForm.reset();
     toggleModal(false);
@@ -82,33 +95,33 @@ const editForm = document.getElementById('editMovieForm');
 const editId = document.getElementById('editMovieId');
 const editTitle = document.getElementById('editMovieTitle');
 const editGenres = document.getElementById('editMovieGenres');
-const editDuration = document.getElementById('editMovieGenres');
-const editData = document.getElementById('editMovieGenres');
-const editDesc = document.getElementById('editMovieGenres');
-const editPoster = document.getElementById('editMovieGenres');
-const editStatus = document.getElementById('editMovieGenres');
-const editPrice = document.getElementById('editMovieGenres');
+const editDuration = document.getElementById('editMovieDuration'); 
+const editDate = document.getElementById('editMovieDate');         
+const editDesc = document.getElementById('editMovieDesc');         
+const editPoster = document.getElementById('editMoviePoster');   
+const editStatus = document.getElementById('editMovieStatus');    
+const editPrice = document.getElementById('editMoviePrice');
 
 const openEditModal = (id) => {
     const movie = movies.find(m => m.id === id);
     if (!movie) return;
 
-    editId.value = movie.id;
-    editTitle.value = movie.title;
-    editGenres.value = movie.genres;
-    editDuration.value = movie.duration;
-    editData.value = movie.releasedDate;
-    editDesc.value = movie.description || "";
-    editPoster.value = movie.posterUrl;
-    editStatus.value = movie.status;
-    editPrice.value = movie.ticketPrice || "";
+    document.getElementById('editMovieId').value = movie.id;
+    document.getElementById('editMovieTitle').value = movie.title;
+    document.getElementById('editMovieGenres').value = movie.genres;
+    document.getElementById('editMovieDuration').value = movie.duration;
+    document.getElementById('editMovieDate').value = movie.releasedDate;
+    document.getElementById('editMovieDesc').value = movie.description || "";
+    document.getElementById('editMoviePoster').value = movie.posterUrl;
+    document.getElementById('editMovieStatus').value = movie.status;
+    document.getElementById('editMoviePrice').value = movie.ticketPrice || "";
 
     editModal.style.display = 'flex';
 };
 
 editForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const id = document.getElementById('editMovieId').value;
+    const id = +document.getElementById('editMovieId').value;
     const index = movies.findIndex(m => m.id === id);
     
     if (index !== -1) {
@@ -120,12 +133,13 @@ editForm.addEventListener('submit', (e) => {
             releasedDate: document.getElementById('editMovieDate').value,
             description: document.getElementById('editMovieDesc').value,
             posterUrl: document.getElementById('editMoviePoster').value,
-            status: document.getElementById('editMovieStatus').value,
+            status: +document.getElementById('editMovieStatus').value,
             ticketPrice: document.getElementById('editMoviePrice').value
         };
+        
+        saveToLocal(); 
         renderMovies(movies);
         editModal.style.display = 'none';
-        alert("Cập nhật thành công!");
     }
 });
 const closeEdit = document.querySelector('.close-edit-modal');
@@ -144,5 +158,6 @@ const setupLogout = () => {
 };
 
 setupLogout();
+loadFromLocal();
 renderMovies(movies);
 setupFilter();
