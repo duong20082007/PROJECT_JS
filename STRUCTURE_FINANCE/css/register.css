@@ -1,0 +1,154 @@
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: 'Roboto', sans-serif; 
+}
+
+body.register-page {
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                url('../assets/images/Blurred\ Background\ Image.png') ;
+    height: 100vh;
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 5%;
+    background: rgba(0, 0, 0, 0.5);
+}
+.logo { 
+    font-size: 24px; 
+    font-weight: bold; 
+}
+.logo span { 
+    color: #e50914; 
+}
+
+.nav-menu a { 
+    color: #ccc; 
+    text-decoration: none; 
+    margin-left: 25px; 
+    font-size: 14px; 
+}
+.btn-login-nav { 
+    background: #e50914; 
+    color: white; 
+    border: none; 
+    padding: 8px 20px; 
+    border-radius: 5px; 
+    margin-left: 25px; 
+    cursor: pointer; 
+}
+
+.register-container {
+    flex: 1; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    padding-top: 80px;
+}
+.register-card {
+    background: rgba(15, 23, 42, 0.95); 
+    padding: 40px; 
+    border-radius: 12px; 
+    width: 450px; 
+    text-align: center;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+}
+
+h2 { 
+    font-size: 28px; 
+    margin-bottom: 8px; 
+}
+.subtitle { 
+    color: #94a3b8; 
+    font-size: 13px; 
+    margin-bottom: 30px; 
+}
+
+.input-group { 
+    text-align: left; 
+    margin-bottom: 18px; 
+}
+.input-group label { 
+    color: #94a3b8; 
+    font-size: 13px; 
+    display: block; 
+    margin-bottom: 8px; 
+}
+.input-group input {
+    width: 100%; 
+    padding: 12px 15px; 
+    background: #0f172a;
+    border: 1px solid #334155; 
+    color: white; 
+    text-align: left;
+    border-radius: 8px; 
+}
+.input-wrapper { 
+    position: relative; 
+}
+.input-wrapper i { 
+    position: absolute; 
+    right: 15px; 
+    top: 50%; 
+    transform: translateY(-50%); 
+    color: #64748b; 
+    cursor: pointer; 
+}
+
+.terms { 
+    display: flex; 
+    gap: 10px; 
+    text-align: left; 
+    font-size: 12px; 
+    color: #94a3b8; 
+    margin-bottom: 25px; 
+    line-height: 1.5; 
+}
+.terms a { 
+    color: #e50914; 
+    text-decoration: none; 
+}
+
+.btn-submit {
+    width: 100%; 
+    padding: 14px; 
+    background: #e50914; 
+    color: white;
+    border: none; 
+    border-radius: 8px; 
+    font-weight: bold; 
+    cursor: pointer;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    gap: 10px; 
+    transition: 0.3s;
+}
+.btn-submit:hover {
+    background: #c40812; 
+}
+
+.footer-text { 
+    margin-top: 25px; 
+    font-size: 13px; 
+    color: #94a3b8; 
+}
+.footer-text a { 
+    color: #e50914; 
+    text-decoration: none; 
+    font-weight: bold; 
+}
+
+.footer-copyright { 
+    text-align: center; 
+    padding: 20px; 
+    font-size: 12px; 
+    color: #475569; 
+}
