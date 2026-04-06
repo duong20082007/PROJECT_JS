@@ -271,6 +271,7 @@ const renderMovies = () => {
         return titleMatch && statusMatch;
     });
 
+    // Tính toán phân trang
     const totalItems = filteredData.length;
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -298,7 +299,7 @@ const renderMovies = () => {
                 <td><span class="status-badge ${statusClass}">${statusText}</span></td>
                 <td class="actions">
                     <i class="fa-solid fa-pen" title="Sửa" onclick="openEditModal(${movie.id})"></i>
-                    <i class="fa-solid fa-circle-xmark" title="Xóa" onclick="deleteMovie(${movie.id})"></i>
+                    <i class="fa-solid fa-circle-xmark" title="Xóa" id="deleteMovieName" onclick = "btnDelete(${movie.id})")"></i>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -337,34 +338,20 @@ const changePage = (page) => {
     renderMovies();
 };
 
-let movieToDeleteId = null; 
 
-const deleteMovie = (id) => {
-    const movie = movies.find(m => m.id === id);
+const confirmDeleteBtn = document.getElementById('deleteMovieName');
 
-    movieToDeleteId = id; 
-    document.getElementById('deleteMovieName').innerText = `"${movie.title}"`;
-    document.getElementById('deleteModal').style.display = 'flex'; 
-};
-
-const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
-const deleteModal = document.getElementById('deleteModal');
-confirmDeleteBtn.onclick = () => {
-    if (movieToDeleteId !== null) {
-        movies = movies.filter(m => m.id !== movieToDeleteId); 
+const btnDelete = (id) => {
+    const deleteById = movies.find(m => m.id === id)
+    if (confirm(`Bạn có chắc muốn xóa phim ${deleteById.title} không`)) {
+        movies = movies.filter(m => m.id !== id); 
         saveToLocal(); 
         renderMovies();
-        
-        deleteModal.style.display = 'none';
-        movieToDeleteId = null;
     }
-};
+}
 
-const closeDeleteBtn = document.getElementById('closeDeleteBtn');
-closeDeleteBtn.onclick = () => {
-    document.getElementById('deleteModal').style.display = 'none';
-    movieToDeleteId = null;
-};
+confirmDeleteBtn.addEventListener("click", btnDelete )
+
 
 let searchInputElement = document.getElementById("searchInput");
 
@@ -436,76 +423,94 @@ if (closeModalX){
 if (cancelBtn) {
     cancelBtn.onclick = () => toggleModal(false);
 }
+const titleCheck = document.getElementById('movieTitle');
+const genresCheck = document.getElementById('movieGenres');
+const durationCheck = document.getElementById('movieDuration');
+const releasedDateCheck = document.getElementById('movieDate');
+const statusCheck = document.getElementById('movieStatus');
+const posterUrlCheck = document.getElementById('moviePoster');
+const descriptionCheck = document.getElementById('movieDesc');
     
 addMovieForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    const title = document.getElementById('movieTitle').value;
-    const genres = document.getElementById('movieGenres').value;
-    const duration = document.getElementById('movieDuration').value;
-    const releasedDate = document.getElementById('movieDate').value;
-    const status = document.getElementById('movieStatus').value;
-    const posterUrl = document.getElementById('moviePoster').value;
-    const description = document.getElementById('movieDesc').value;
-    
-    const titleCheck = document.getElementById('movieTitle');
-    const genresCheck = document.getElementById('movieGenres');
-    const durationCheck = document.getElementById('movieDuration');
-    const releasedDateCheck = document.getElementById('movieDate');
-    const statusCheck = document.getElementById('movieStatus');
-    const posterUrlCheck = document.getElementById('moviePoster');
-    const descriptionCheck = document.getElementById('movieDesc');
-    if (title.trim() === "") {
-        titleCheck.innerText = "Tiêu đề không được để trống";
-        title.style.borderColor = "red";
+    const title = document.getElementById('movieTitle');
+    const titleCheck = document.getElementById('movieTitleErr');
+    const genres = document.getElementById('movieGenres');
+    const genresCheck = document.getElementById('movieGenresErr');
+    const duration = document.getElementById('movieDuration');
+    const durationCheck = document.getElementById('movieDurationErr');
+    const releasedDate = document.getElementById('movieDate');
+    const releasedDateCheck = document.getElementById('movieDateErr');
+    const posterUrl = document.getElementById('moviePoster');
+    const posterUrlCheck = document.getElementById('moviePosterErr');
+    const description = document.getElementById('movieDesc');
+    const descriptionCheck = document.getElementById('movieDescErr');
+
+    if (title.value.trim() === "") {
+        titleCheck.innerText = "Tên phim không được để trống";
         titleCheck.style.color = "red";
+        title.style.borderColor = "red";
         return;
+    } else {
+        titleCheck.innerText = "";
+        title.style.borderColor = "white";
     }
 
-    if (genres.trim() === "") {
+    if (genres.value.trim() === "") {
         genresCheck.innerText = "Thể loại không được để trống";
-        genres.style.borderColor = "red";
         genresCheck.style.color = "red";
+        genres.style.borderColor = "red";
         return;
+    } else {
+        genresCheck.innerText = "";
+        genres.style.borderColor = "white";
     }
 
-    if (duration.trim() === "") {
-        durationCheck.innerText = "Thời lượng không được để trống";
-        duration.style.borderColor = "red";
+    if (duration.value.trim() === "" || +duration.value <= 0) {
+        durationCheck.innerText = "Thời lượng không được để trống và phải hợp lệ";
         durationCheck.style.color = "red";
-        return;
-    }
-
-    if (+duration <= 0) {
-        durationCheck.innerText = "Thời lượng phải hợp lệ";
         duration.style.borderColor = "red";
-        durationCheck.style.color = "red";
         return;
+    } else {
+        durationCheck.innerText = "";
+        duration.style.borderColor = "white";
     }
 
-    if (releasedDate === "") {
-        alert("Ngày khởi chiếu không được để trống");
+    if (releasedDate.value === "") {
+        releasedDateCheck.innerText = "Ngày khởi chiếu không được để trống";
+        releasedDateCheck.style.color = "red";
+        releasedDate.style.borderColor = "red";
         return;
+    } else {
+        releasedDateCheck.innerText = "";
+        releasedDate.style.borderColor = "white";
     }
 
-    if (status === "") {
-        alert("Trạng thái phim không được để trống");
+    if (posterUrl.value.trim() === "") {
+        posterUrlCheck.innerText = "URL ảnh không được để trống";
+        posterUrlCheck.style.color = "red";
+        posterUrl.style.borderColor = "red";
         return;
     }
-
-    if (posterUrl.trim() === "") {
-        alert("URL ảnh bìa phim không được để trống");
+    if (posterUrl.value.startsWith("http") || posterUrl.value.startsWith("https")) {
+        posterUrlCheck.innerText = "URL phải bắt đầu bằng http hoặc ../";
+        posterUrlCheck.style.color = "red";
+        posterUrl.style.borderColor = "red";
         return;
+    } else {
+        posterUrlCheck.innerText = "";
+        posterUrl.style.borderColor = "white";
     }
 
-    if (posterUrl.indexOf("http") !== 0 && posterUrl.indexOf("../") !== 0) {
-        alert("URL ảnh bìa phim phải hợp lệ (bắt đầu bằng http hoặc ../)");
+    if (description.value.trim() === "") {
+        descriptionCheck.innerText = "Mô tả không được để trống";
+        descriptionCheck.style.color = "red";
+        description.style.borderColor = "red";
         return;
-    }
-
-    if (description.trim() === "") {
-        alert("Mô tả ngắn không được để trống");
-        return;
+    } else {
+        descriptionCheck.innerText = "";
+        description.style.borderColor = "white";
     }
 
     const newMovie = {
@@ -557,6 +562,9 @@ const openEditModal = (id) => {
     editId.value = movie.id;
     editTitle.value = movie.title;
     editGenres.value = movie.genres;
+    editId.value = movie.id;
+    editTitle.value = movie.title;
+    editGenres.value = movie.genres;
     editDuration.value = movie.duration;
     editDate.value = movie.releasedDate;
     editDesc.value = movie.description || "";
@@ -570,59 +578,94 @@ const openEditModal = (id) => {
 editForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    const title = document.getElementById('movieTitle').value;
-    const genres = document.getElementById('movieGenres').value;
-    const duration = document.getElementById('movieDuration').value;
-    const releasedDate = document.getElementById('movieDate').value;
-    const status = document.getElementById('movieStatus').value;
-    const posterUrl = document.getElementById('moviePoster').value;
-    const description = document.getElementById('movieDesc').value;
+    const editTitleCheck = document.getElementById('editMovieModal');
+    const title = document.getElementById('movieTitle');
+    const titleCheck = document.getElementById('movieTitleErr');
+    const genres = document.getElementById('movieGenres');
+    const genresCheck = document.getElementById('movieGenresErr');
+    const duration = document.getElementById('movieDuration');
+    const durationCheck = document.getElementById('movieDurationErr');
+    const releasedDate = document.getElementById('movieDate');
+    const releasedDateCheck = document.getElementById('movieDateErr');
+    const posterUrl = document.getElementById('moviePoster');
+    const posterUrlCheck = document.getElementById('moviePosterErr');
+    const description = document.getElementById('movieDesc');
+    const descriptionCheck = document.getElementById('movieDescErr');
 
-    if (title.trim() === "") {
-        alert("Tên phim không được để trống");
+    if (editTitle.value.trim() === "") {
+        editTitleCheck.innerText = "Tên phim không được để trống";
+        editTitleCheck.style.color = "red";
+        editTitle.style.borderColor = "red";
         return;
+    } else {
+        editTitleCheck.innerText = "";
+        editTitle.style.borderColor = "white";
     }
 
-    if (genres.trim() === "") {
-        emailCheck.innerText = "Email không được để trống";
-        email.style.borderColor = "red";
-        emailCheck.style.color = "red";z
+    if (title.value.trim() === "") {
+        titleCheck.innerText = "Tên phim không được để trống";
+        titleCheck.style.color = "red";
+        title.style.borderColor = "red";
         return;
+    } else {
+        titleCheck.innerText = "";
+        title.style.borderColor = "white";
     }
 
-    if (duration.trim() === "") {
-        alert("Thời lượng không được để trống");
+    if (genres.value.trim() === "") {
+        genresCheck.innerText = "Thể loại không được để trống";
+        genresCheck.style.color = "red";
+        genres.style.borderColor = "red";
         return;
+    } else {
+        genresCheck.innerText = "";
+        genres.style.borderColor = "white";
     }
 
-    if (+duration <= 0) {
-        alert("Thời lượng phải là số dương hợp lệ");
+    if (duration.value.trim() === "" || Number(duration.value) <= 0) {
+        durationCheck.innerText = "Thời lượng không được để trống và phải hợp lệ";
+        durationCheck.style.color = "red";
+        duration.style.borderColor = "red";
         return;
+    } else {
+        durationCheck.innerText = "";
+        duration.style.borderColor = "white";
     }
 
-    if (releasedDate === "") {
-        alert("Ngày khởi chiếu không được để trống");
+    if (releasedDate.value === "") {
+        releasedDateCheck.innerText = "Ngày khởi chiếu không được để trống";
+        releasedDateCheck.style.color = "red";
+        releasedDate.style.borderColor = "red";
         return;
+    } else {
+        releasedDateCheck.innerText = "";
+        releasedDate.style.borderColor = "white";
     }
 
-    if (status === "") {
-        alert("Trạng thái phim không được để trống");
+    if (posterUrl.value.trim() === "") {
+        posterUrlCheck.innerText = "URL ảnh không được để trống";
+        posterUrlCheck.style.color = "red";
+        posterUrl.style.borderColor = "red";
         return;
     }
-
-    if (posterUrl.trim() === "") {
-        alert("URL ảnh bìa phim không được để trống");
+    if (posterUrl.value.startsWith("http") || posterUrl.value.startsWith("https") ) {
+        posterUrlCheck.innerText = "URL phải bắt đầu bằng http hoặc ../";
+        posterUrlCheck.style.color = "red";
+        posterUrl.style.borderColor = "red";
         return;
+    } else {
+        posterUrlCheck.innerText = "";
+        posterUrl.style.borderColor = "white";
     }
 
-    if (posterUrl.indexOf("http") !== 0 && posterUrl.indexOf("../") !== 0) {
-        alert("URL ảnh bìa phim phải hợp lệ (bắt đầu bằng http hoặc ../)");
+    if (description.value.trim() === "") {
+        descriptionCheck.innerText = "Mô tả không được để trống";
+        descriptionCheck.style.color = "red";
+        description.style.borderColor = "red";
         return;
-    }
-
-    if (description.trim() === "") {
-        alert("Mô tả ngắn không được để trống");
-        return;
+    } else {
+        descriptionCheck.innerText = "";
+        description.style.borderColor = "white";
     }
 
     const id = +document.getElementById('editMovieId').value;
@@ -657,7 +700,9 @@ const logoutBtn = document.querySelector('.logout-btn');
 const setupLogout = () => {
     if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
-            if(confirm("Đăng xuất ngay?")) window.location.href = "login.html"; 
+            if(confirm("Đăng xuất ngay?")) {
+                window.location.href = "login.html"; 
+            } 
         });
     }
 };
