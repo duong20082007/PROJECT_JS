@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Phim - Rikkei Cinema</title>
     <link rel="stylesheet" href="../css/manager.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -17,12 +17,12 @@
             </nav>
             
             <div class="admin-profile">
-                <img src="../assets/images/Image+Border.png" alt="Avatar">
+                <img src="../assets/images/Image+Border.png" alt="Avatar" onerror="this.src='https://ui-avatars.com/api/?name=Admin'">
                 <div class="profile-info">
                     <p class="name">Admin Quản lý</p>
                     <p class="email">LQTuan@rikkei.edu.vn</p>
                 </div>
-                <button class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i></button>
+                <button class="logout-btn" title="Đăng xuất"><i class="fa-solid fa-right-from-bracket"></i></button>
             </div>
         </aside>
 
@@ -35,17 +35,19 @@
                 <div class="header-actions">
                     <div class="search-bar">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" id="searchInput" placeholder="Tìm tên phim...">
+                        <input type="text" id="searchInput" placeholder="Tìm tên phim ...">
                     </div>
-                    <button class="add-movie-btn" id="openModalBtn"><i class="fa-solid fa-plus"></i> Thêm phim mới</button>
+                    <button class="add-movie-btn" id="openModalBtn">
+                        <i class="fa-solid fa-plus"></i> Thêm phim mới
+                    </button>
                 </div>
             </header>
 
-            <div class="filter-section">
-                <button class="filter-tab active">Tất cả (24)</button>
-                <button class="filter-tab">Đang chiếu (8)</button>
-                <button class="filter-tab">Sắp chiếu (5)</button>
-                <button class="filter-tab">Đã chiếu (11)</button>
+            <div class="filter-section" id="filterContainer">
+                <button class="filter-tab active" data-status="all">Tất cả</button>
+                <button class="filter-tab" data-status="1">Đang chiếu</button>
+                <button class="filter-tab" data-status="2">Sắp chiếu</button>
+                <button class="filter-tab" data-status="0">Đã chiếu</button>
             </div>
 
             <div class="data-card">
@@ -65,18 +67,8 @@
                         </tbody>
                 </table>
 
-                <div class="pagination">
-                    <div class="page-info">Hiển thị <strong>1-5</strong> trên <strong>24</strong> phim</div>
-                    <div class="page-controls">
-                        <button class="ctrl-btn"><i class="fa-solid fa-chevron-left"></i></button>
-                        <button class="page-num active">1</button>
-                        <button class="page-num">2</button>
-                        <button class="page-num">3</button>
-                        <span>...</span>
-                        <button class="page-num">5</button>
-                        <button class="ctrl-btn"><i class="fa-solid fa-chevron-right"></i></button>
+                <div class="pagination" id="paginationContainer">
                     </div>
-                </div>
             </div>
         </main>
     </div>
@@ -85,12 +77,16 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Thêm Phim Mới</h2>
-                <span class="close-modal">&times;</span>
+                <span class="close-modal" id="close-modal">&times;</span>
             </div>
             <form id="addMovieForm">
                 <div class="form-group">
-                    <label>Tên phim *</label>
-                    <input type="text" id="movieTitle" placeholder="Nhập tên phim" required>
+                    <label>Tên phim (Gốc) *</label>
+                    <input type="text" id="movieTitle" placeholder="Ví dụ: Dune: Part Two" required>
+                </div>
+                <div class="form-group">
+                    <label>Tên phim (Tiếng Việt)</label>
+                    <input type="text" id="movieTitleVi" placeholder="Ví dụ: Hành tinh cát 2">
                 </div>
                 
                 <div class="form-row">
@@ -105,7 +101,7 @@
                     </div>
                     <div class="form-group">
                         <label>Thời lượng (phút) *</label>
-                        <input type="number" id="movieDuration" placeholder="Ví dụ: 120" required>
+                        <input type="number" id="movieDuration" placeholder="120" required>
                     </div>
                 </div>
 
@@ -125,18 +121,18 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Giá vé *</label>
-                    <input type="number" id="moviePrice" placeholder="Nhập giá vé..." required>
+                    <label>Giá vé (VNĐ) *</label>
+                    <input type="number" id="moviePrice" placeholder="100000" required>
                 </div>
 
                 <div class="form-group">
                     <label>URL Ảnh bìa</label>
-                    <input type="text" id="moviePoster" placeholder="https://example.com/poster.jpg">
+                    <input type="text" id="moviePoster" placeholder="Link ảnh online hoặc đường dẫn file">
                 </div>
 
                 <div class="form-group">
                     <label>Mô tả ngắn</label>
-                    <textarea id="movieDesc" rows="3" placeholder="Nhập tóm tắt nội dung..."></textarea>
+                    <textarea id="movieDesc" rows="3" placeholder="Tóm tắt nội dung phim..."></textarea>
                 </div>
 
                 <div class="form-footer">
@@ -146,15 +142,15 @@
             </form>
         </div>
     </div>
+
     <div id="editMovieModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Cập Nhật Thông Tin Phim</h2>
-                <span class="close-edit-modal" style="cursor:pointer">&times;</span>
+                <span class="close-edit-modal" id="close-edit-modal">&times;</span>
             </div>
             <form id="editMovieForm">
                 <input type="hidden" id="editMovieId">
-                
                 <div class="form-row">
                     <div class="form-group">
                         <label>Tên phim</label>
@@ -170,7 +166,6 @@
                         </select>
                     </div>
                 </div>
-
                 <div class="form-row">
                     <div class="form-group">
                         <label>Thời lượng (phút)</label>
@@ -181,17 +176,14 @@
                         <input type="text" id="editMovieDate" placeholder="DD/MM/YYYY" required>
                     </div>
                 </div>
-
                 <div class="form-group">
                     <label>Mô tả ngắn</label>
                     <textarea id="editMovieDesc" rows="4"></textarea>
                 </div>
-
                 <div class="form-group">
                     <label>URL Ảnh bìa</label>
                     <input type="text" id="editMoviePoster">
                 </div>
-
                 <div class="form-group">
                     <label>Trạng thái</label>
                     <select id="editMovieStatus">
@@ -200,19 +192,28 @@
                         <option value="0">Đã chiếu</option>
                     </select>
                 </div>
-
                 <div class="form-group">
                     <label>Giá vé</label>
                     <input type="text" id="editMoviePrice">
                 </div>
-
                 <div class="form-footer">
                     <button type="button" class="btn-cancel" id="closeEditBtn">Hủy</button>
-                    <button type="submit" class="btn-submit-form" style="background-color: #e50914;">
-                        <i class="fa-solid fa-save"></i> Cập nhật
-                    </button>
+                    <button type="submit" class="btn-submit-form" style="background-color: #e50914;">Lưu thay đổi</button>
                 </div>
             </form>
+        </div>
+    </div>
+    <div id="deleteModal" class="modal">
+        <div class="modal-content delete-modal-content">
+            <div class="delete-icon">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h2>Xác nhận xóa phim</h2>
+            <p>Bạn có chắc chắn muốn xóa phim <strong id="deleteMovieName">"Tên phim"</strong> không? Hành động này không thể hoàn tác.</p>
+            <div class="form-footer">
+                <button type="button" class="btn-cancel" id="closeDeleteBtn">Hủy</button>
+                <button type="button" class="btn-submit-form btn-delete-now" id="confirmDeleteBtn">Xóa ngay</button>
+            </div>
         </div>
     </div>
 
