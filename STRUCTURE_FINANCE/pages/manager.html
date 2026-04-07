@@ -12,8 +12,8 @@
         <aside class="sidebar">
             <div class="logo">Rikkei <span>Cinema</span></div>
             <nav class="nav-menu">
-                <a href="#" class="active"><i class="fa-solid fa-film"></i> Quản lý phim</a>
-                <a href="#"><i class="fa-solid fa-ticket"></i> Quản lý vé</a>
+                <a href="./manager.html" class="active"><i class="fa-solid fa-film"></i> Quản lý phim</a>
+                <a href="./ticket.html"><i class="fa-solid fa-ticket"></i> Quản lý vé</a>
             </nav>
             
             <div class="admin-profile">
@@ -76,39 +76,39 @@
     <div id="addMovieModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Thêm Phim Mới</h2>
+                <h3>Thêm phim mới</h3>
                 <span class="close-modal" id="close-modal">&times;</span>
             </div>
             <form id="addMovieForm">
-                <div class="form-group">
-                    <label>Tên phim (Gốc) *</label>
-                    <input type="text" id="movieTitle" placeholder="Ví dụ: Dune: Part Two" required>
-                </div>
-                <div class="form-group">
-                    <label>Tên phim (Tiếng Việt)</label>
-                    <input type="text" id="movieTitleVi" placeholder="Ví dụ: Hành tinh cát 2">
-                </div>
-                
-                <div class="form-row">
+                <div class="form-grid">
                     <div class="form-group">
-                        <label>Thể loại *</label>
-                        <select id="movieGenres" required>
-                            <option value="Hành động, Viễn tưởng">Hành động, Viễn tưởng</option>
-                            <option value="Hoạt hình, Hài">Hoạt hình, Hài</option>
-                            <option value="Kinh dị, Bí ẩn">Kinh dị, Bí ẩn</option>
-                            <option value="Tâm lý, Tình cảm">Tâm lý, Tình cảm</option>
+                        <label>Tên phim (Gốc)</label>
+                        <input type="text" id="movieTitle" placeholder="VD: Dune: Part Two">
+                        <small id="movieTitleErr" class="error-msg"></small>
+                    </div>
+                    <div class="form-group">
+                    <label>Thể loại</label>
+                        <select id="movieGenres">
+                            <option value="">-- Chọn thể loại --</option>
+                            <option value="Hành động">Hành động</option>
+                            <option value="Viễn tưởng">Viễn tưởng</option>
+                            <option value="Kinh dị">Kinh dị</option>
+                            <option value="Hoạt hình">Hoạt hình</option>
+                            <option value="Hài">Hài</option>
+                            <option value="Tâm lý">Tâm lý</option>
+                            <option value="Tình cảm">Tình cảm</option>
                         </select>
+                        <small id="movieGenresErr" class="error-msg"></small>
                     </div>
                     <div class="form-group">
-                        <label>Thời lượng (phút) *</label>
-                        <input type="number" id="movieDuration" placeholder="120" required>
+                        <label>Thời lượng (phút)</label>
+                        <input type="number" id="movieDuration">
+                        <small id="movieDurationErr" class="error-msg"></small>
                     </div>
-                </div>
-
-                <div class="form-row">
                     <div class="form-group">
-                        <label>Ngày khởi chiếu *</label>
-                        <input type="date" id="movieDate" required>
+                        <label>Ngày khởi chiếu</label>
+                        <input type="date" id="movieDate">
+                        <small id="movieDateErr" class="error-msg"></small>
                     </div>
                     <div class="form-group">
                         <label>Trạng thái</label>
@@ -117,27 +117,27 @@
                             <option value="2">Sắp chiếu</option>
                             <option value="0">Đã chiếu</option>
                         </select>
+                        <small id="movieStatusErr" class="error-msg"></small>
+                    </div>
+                    <div class="form-group">
+                        <label>Giá vé (VNĐ)</label>
+                        <input type="number" id="moviePrice">
+                        <small id="moviePriceErr" class="error-msg"></small> 
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <label>Giá vé (VNĐ) *</label>
-                    <input type="number" id="moviePrice" placeholder="100000" required>
+                <div class="form-group full-width">
+                    <label>URL Poster</label>
+                    <input type="text" id="moviePoster" placeholder="../assets/images/...">
+                    <small id="moviePosterErr" class="error-msg"></small>
                 </div>
-
-                <div class="form-group">
-                    <label>URL Ảnh bìa</label>
-                    <input type="text" id="moviePoster" placeholder="Link ảnh online hoặc đường dẫn file">
-                </div>
-
-                <div class="form-group">
+                <div class="form-group full-width">
                     <label>Mô tả ngắn</label>
-                    <textarea id="movieDesc" rows="3" placeholder="Tóm tắt nội dung phim..."></textarea>
+                    <textarea id="movieDesc" rows="3"></textarea>
+                    <small id="movieDescErr" class="error-msg"></small>
                 </div>
-
-                <div class="form-footer">
+                <div class="modal-footer">
                     <button type="button" class="btn-cancel" id="cancelBtn">Hủy</button>
-                    <button type="submit" class="btn-submit-form">Thêm mới</button>
+                    <button type="submit" class="btn-save">Lưu phim</button>
                 </div>
             </form>
         </div>
@@ -146,63 +146,73 @@
     <div id="editMovieModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Cập Nhật Thông Tin Phim</h2>
+                <h3>Chỉnh sửa phim</h3>
                 <span class="close-edit-modal" id="close-edit-modal">&times;</span>
             </div>
             <form id="editMovieForm">
                 <input type="hidden" id="editMovieId">
-                <div class="form-row">
+                <div class="form-grid">
                     <div class="form-group">
                         <label>Tên phim</label>
-                        <input type="text" id="editMovieTitle" required>
+                        <input type="text" id="editMovieTitle">
+                        <small id="editMovieTitleErr" class="error-msg"></small>
                     </div>
                     <div class="form-group">
-                        <label>Thể loại</label>
-                        <select id="editMovieGenres" required>
-                            <option value="Hành động, Viễn tưởng">Hành động, Viễn tưởng</option>
-                            <option value="Hoạt hình, Hài">Hoạt hình, Hài</option>
-                            <option value="Kinh dị, Bí ẩn">Kinh dị, Bí ẩn</option>
-                            <option value="Tâm lý, Tình cảm">Tâm lý, Tình cảm</option>
+                    <label>Thể loại</label>
+                        <select id="editMovieGenres">
+                            <option value="Hành động">Hành động</option>
+                            <option value="Viễn tưởng">Viễn tưởng</option>
+                            <option value="Kinh dị">Kinh dị</option>
+                            <option value="Hoạt hình">Hoạt hình</option>
+                            <option value="Hài">Hài</option>
+                            <option value="Tâm lý">Tâm lý</option>
+                            <option value="Tình cảm">Tình cảm</option>
                         </select>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Thời lượng (phút)</label>
-                        <input type="number" id="editMovieDuration" required>
+                        <small id="editMovieGenresErr" class="error-msg"></small>
                     </div>
                     <div class="form-group">
-                        <label>Ngày khởi chiếu</label>
-                        <input type="text" id="editMovieDate" placeholder="DD/MM/YYYY" required>
+                        <label>Thời lượng</label>
+                        <input type="number" id="editMovieDuration">
+                        <small id="editMovieDurationErr" class="error-msg"></small>
+                    </div>
+                    <div class="form-group">
+                        <label>Ngày chiếu (DD/MM/YYYY)</label>
+                        <input type="text" id="editMovieDate">
+                        <small id="editMovieDateErr" class="error-msg"></small>
+                    </div>
+                    <div class="form-group">
+                        <label>Trạng thái</label>
+                        <select id="editMovieStatus">
+                            <option value="1">Đang chiếu</option>
+                            <option value="2">Sắp chiếu</option>
+                            <option value="0">Đã chiếu</option>
+                        </select>
+                        <small id="editMovieStatusErr" class="error-msg"></small>
+                    </div>
+                    <div class="form-group">
+                        <label>Giá vé</label>
+                        <input type="number" id="editMoviePrice">
+                        <small id="editMoviePriceErr" class="error-msg"></small>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Mô tả ngắn</label>
-                    <textarea id="editMovieDesc" rows="4"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>URL Ảnh bìa</label>
+                    <label>URL Poster</label>
                     <input type="text" id="editMoviePoster">
+                    <small id="editMoviePosterErr" class="error-msg"></small>
                 </div>
                 <div class="form-group">
-                    <label>Trạng thái</label>
-                    <select id="editMovieStatus">
-                        <option value="1">Đang chiếu</option>
-                        <option value="2">Sắp chiếu</option>
-                        <option value="0">Đã chiếu</option>
-                    </select>
+                    <label>Mô tả</label>
+                    <textarea id="editMovieDesc" rows="3"></textarea>
+                    <small id="editMovieDescErr" class="error-msg"></small>
                 </div>
-                <div class="form-group">
-                    <label>Giá vé</label>
-                    <input type="text" id="editMoviePrice">
-                </div>
-                <div class="form-footer">
-                    <button type="button" class="btn-cancel" id="closeEditBtn">Hủy</button>
-                    <button type="submit" class="btn-submit-form" style="background-color: #e50914;">Lưu thay đổi</button>
+                <div class="modal-footer">
+                    <button type="button" id="closeEditBtn" class="btn-cancel">Hủy</button>
+                    <button type="submit" class="btn-save">Cập nhật</button>
                 </div>
             </form>
         </div>
     </div>
+
     <div id="deleteModal" class="modal">
         <div class="modal-content delete-modal-content">
             <div class="delete-icon">
