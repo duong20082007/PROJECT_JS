@@ -299,7 +299,7 @@ const renderMovies = () => {
                 <td><span class="status-badge ${statusClass}">${statusText}</span></td>
                 <td class="actions">
                     <i class="fa-solid fa-pen" title="Sửa" onclick="openEditModal(${movie.id})"></i>
-                    <i class="fa-solid fa-circle-xmark btn-delete-trigger" title="Xóa" onclick="btnDelete(${movie.id})"></i>
+                    <i class="fa-solid fa-circle-xmark btn-delete-trigger" title="Xóa" onclick="openDeleteModal(${movie.id})"></i>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -338,20 +338,31 @@ const changePage = (page) => {
     renderMovies();
 };
 
+let movieIdToDelete = null;
 
-const confirmDeleteBtn = document.getElementById('deleteMovieName');
-
-const btnDelete = (id) => {
-    const deleteById = movies.find(m => m.id === id)
-    if (confirm(`Bạn có chắc muốn xóa phim ${deleteById.title} không`)) {
-        movies = movies.filter(m => m.id !== id); 
-        saveToLocal(); 
-        renderMovies();
+const openDeleteModal = (id) => {
+    movieIdToDelete = id;
+    const movie = movies.find(m => m.id === id);
+    
+    if (movie) {
+        const deleteNameText = document.getElementById('deleteMovieName');
+        if (deleteNameText) {
+            deleteNameText.innerText = `"${movie.title}"`;
+        }
+        deleteModal.style.display = 'flex';
     }
-}
+};
 
-confirmDeleteBtn.addEventListener("click", btnDelete);
-
+document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
+    if (movieIdToDelete !== null) {
+        movies = movies.filter(m => m.id !== movieIdToDelete);
+        
+        saveToLocal();      
+        renderMovies();    
+        deleteModal.style.display = 'none'; 
+        movieIdToDelete = null; 
+    }
+});
 
 let searchInputElement = document.getElementById("searchInput");
 
