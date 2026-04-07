@@ -299,7 +299,7 @@ const renderMovies = () => {
                 <td><span class="status-badge ${statusClass}">${statusText}</span></td>
                 <td class="actions">
                     <i class="fa-solid fa-pen" title="Sửa" onclick="openEditModal(${movie.id})"></i>
-                    <i class="fa-solid fa-circle-xmark" title="Xóa" id="deleteMovieName" onclick = "btnDelete(${movie.id})")"></i>
+                    <i class="fa-solid fa-circle-xmark btn-delete-trigger" title="Xóa" data-id="${movie.id}"></i>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -446,6 +446,8 @@ addMovieForm.addEventListener('submit', (e) => {
     const posterUrlCheck = document.getElementById('moviePosterErr');
     const description = document.getElementById('movieDesc');
     const descriptionCheck = document.getElementById('movieDescErr');
+    const price = document.getElementById('moviePrice');
+    const priceCheck = document.getElementById('moviePriceErr');
 
     if (title.value.trim() === "") {
         titleCheck.innerText = "Tên phim không được để trống";
@@ -454,27 +456,37 @@ addMovieForm.addEventListener('submit', (e) => {
         return;
     } else {
         titleCheck.innerText = "";
-        title.style.borderColor = "white";
+        title.style.borderColor = "#2d2626";
     }
 
-    if (genres.value.trim() === "") {
-        genresCheck.innerText = "Thể loại không được để trống";
+    if (genres.value === "") {
+        genresCheck.innerText = "Vui lòng chọn thể loại";
         genresCheck.style.color = "red";
         genres.style.borderColor = "red";
         return;
     } else {
         genresCheck.innerText = "";
-        genres.style.borderColor = "white";
+        genres.style.borderColor = "#2d2626";
+    }
+
+    if (price.value.trim() === "" || Number(price.value) <= 0) {
+        priceCheck.innerText = "Giá vé không được để trống và phải lớn hơn 0";
+        priceCheck.style.color = "red";
+        price.style.borderColor = "red";
+        return;
+    } else {
+        priceCheck.innerText = "";
+        price.style.borderColor = "#2d2626";
     }
 
     if (duration.value.trim() === "" || +duration.value <= 0) {
-        durationCheck.innerText = "Thời lượng không được để trống và phải hợp lệ";
+        durationCheck.innerText = "Thời lượng phải là số dương";
         durationCheck.style.color = "red";
         duration.style.borderColor = "red";
         return;
     } else {
         durationCheck.innerText = "";
-        duration.style.borderColor = "white";
+        duration.style.borderColor = "#2d2626";
     }
 
     if (releasedDate.value === "") {
@@ -484,23 +496,23 @@ addMovieForm.addEventListener('submit', (e) => {
         return;
     } else {
         releasedDateCheck.innerText = "";
-        releasedDate.style.borderColor = "white";
+        releasedDate.style.borderColor = "#2d2626";
     }
 
-    if (posterUrl.value.trim() === "") {
+    const urlValue = posterUrl.value.trim();
+    if (urlValue === "") {
         posterUrlCheck.innerText = "URL ảnh không được để trống";
         posterUrlCheck.style.color = "red";
         posterUrl.style.borderColor = "red";
         return;
-    }
-    if (posterUrl.value.startsWith("http") || posterUrl.value.startsWith("https")) {
+    } else if (!urlValue.startsWith("http") && !urlValue.startsWith("../")) {
         posterUrlCheck.innerText = "URL phải bắt đầu bằng http hoặc ../";
         posterUrlCheck.style.color = "red";
         posterUrl.style.borderColor = "red";
         return;
     } else {
         posterUrlCheck.innerText = "";
-        posterUrl.style.borderColor = "white";
+        posterUrl.style.borderColor = "#2d2626";
     }
 
     if (description.value.trim() === "") {
@@ -510,7 +522,7 @@ addMovieForm.addEventListener('submit', (e) => {
         return;
     } else {
         descriptionCheck.innerText = "";
-        description.style.borderColor = "white";
+        description.style.borderColor = "#2d2626";
     }
 
     const newMovie = {
@@ -521,6 +533,7 @@ addMovieForm.addEventListener('submit', (e) => {
         duration: document.getElementById('movieDuration').value,
         releasedDate: document.getElementById('movieDate').value.split('-').reverse().join('/'),
         status: +document.getElementById('movieStatus').value,
+        ticketPrice: document.getElementById('moviePrice').value,
         posterUrl: document.getElementById('moviePoster').value || "../assets/images/default.png",
         ticketPrice: document.getElementById('moviePrice').value,
         description: document.getElementById('movieDesc').value
@@ -553,8 +566,9 @@ const editDuration = document.getElementById('editMovieDuration');
 const editDate = document.getElementById('editMovieDate');         
 const editDesc = document.getElementById('editMovieDesc');         
 const editPoster = document.getElementById('editMoviePoster');   
-const editStatus = document.getElementById('editMovieStatus');    
+const editStatus = document.getElementById('editMovieStatus');  
 const editPrice = document.getElementById('editMoviePrice');
+const editPriceCheck = document.getElementById('editMoviePriceErr');
 
 const openEditModal = (id) => {
     const movie = movies.find(m => m.id === id);
@@ -578,29 +592,18 @@ const openEditModal = (id) => {
 editForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    const editTitleCheck = document.getElementById('editMovieModal');
-    const title = document.getElementById('movieTitle');
-    const titleCheck = document.getElementById('movieTitleErr');
-    const genres = document.getElementById('movieGenres');
-    const genresCheck = document.getElementById('movieGenresErr');
-    const duration = document.getElementById('movieDuration');
-    const durationCheck = document.getElementById('movieDurationErr');
-    const releasedDate = document.getElementById('movieDate');
-    const releasedDateCheck = document.getElementById('movieDateErr');
-    const posterUrl = document.getElementById('moviePoster');
-    const posterUrlCheck = document.getElementById('moviePosterErr');
-    const description = document.getElementById('movieDesc');
-    const descriptionCheck = document.getElementById('movieDescErr');
-
-    if (editTitle.value.trim() === "") {
-        editTitleCheck.innerText = "Tên phim không được để trống";
-        editTitleCheck.style.color = "red";
-        editTitle.style.borderColor = "red";
-        return;
-    } else {
-        editTitleCheck.innerText = "";
-        editTitle.style.borderColor = "white";
-    }
+    const title = document.getElementById('editMovieTitle');
+    const titleCheck = document.getElementById('editMovieTitleErr');
+    const genres = document.getElementById('editMovieGenres');
+    const genresCheck = document.getElementById('editMovieGenresErr');
+    const duration = document.getElementById('editMovieDuration');
+    const durationCheck = document.getElementById('editMovieDurationErr');
+    const releasedDate = document.getElementById('editMovieDate');
+    const releasedDateCheck = document.getElementById('editMovieDateErr');
+    const posterUrl = document.getElementById('editMoviePoster');
+    const posterUrlCheck = document.getElementById('editMoviePosterErr');
+    const description = document.getElementById('editMovieDesc');
+    const descriptionCheck = document.getElementById('editMovieDescErr');
 
     if (title.value.trim() === "") {
         titleCheck.innerText = "Tên phim không được để trống";
@@ -609,27 +612,37 @@ editForm.addEventListener('submit', (e) => {
         return;
     } else {
         titleCheck.innerText = "";
-        title.style.borderColor = "white";
+        title.style.borderColor = "#2d2626";
     }
 
-    if (genres.value.trim() === "") {
-        genresCheck.innerText = "Thể loại không được để trống";
+    if (genres.value === "") {
+        genresCheck.innerText = "Vui lòng chọn thể loại";
         genresCheck.style.color = "red";
         genres.style.borderColor = "red";
         return;
     } else {
         genresCheck.innerText = "";
-        genres.style.borderColor = "white";
+        genres.style.borderColor = "#2d2626";
     }
 
-    if (duration.value.trim() === "" || Number(duration.value) <= 0) {
-        durationCheck.innerText = "Thời lượng không được để trống và phải hợp lệ";
+    if (duration.value.trim() === "" || +duration.value <= 0) {
+        durationCheck.innerText = "Thời lượng phải là số dương";
         durationCheck.style.color = "red";
         duration.style.borderColor = "red";
         return;
     } else {
         durationCheck.innerText = "";
-        duration.style.borderColor = "white";
+        duration.style.borderColor = "#2d2626";
+    }
+
+    if (editPrice.value.trim() === "" || +editPrice.value <= 0) {
+        editPriceCheck.innerText = "Giá vé không được để trống và phải hợp lệ";
+        editPriceCheck.style.color = "red";
+        editPrice.style.borderColor = "red";
+        return;
+    } else {
+        editPriceCheck.innerText = "";
+        editPrice.style.borderColor = "#2d2626";
     }
 
     if (releasedDate.value === "") {
@@ -639,23 +652,23 @@ editForm.addEventListener('submit', (e) => {
         return;
     } else {
         releasedDateCheck.innerText = "";
-        releasedDate.style.borderColor = "white";
+        releasedDate.style.borderColor = "#2d2626";
     }
 
-    if (posterUrl.value.trim() === "") {
+    const urlValue = posterUrl.value.trim();
+    if (urlValue === "") {
         posterUrlCheck.innerText = "URL ảnh không được để trống";
         posterUrlCheck.style.color = "red";
         posterUrl.style.borderColor = "red";
         return;
-    }
-    if (posterUrl.value.startsWith("http") || posterUrl.value.startsWith("https") ) {
+    } else if (!urlValue.startsWith("http") && !urlValue.startsWith("../")) {
         posterUrlCheck.innerText = "URL phải bắt đầu bằng http hoặc ../";
         posterUrlCheck.style.color = "red";
         posterUrl.style.borderColor = "red";
         return;
     } else {
         posterUrlCheck.innerText = "";
-        posterUrl.style.borderColor = "white";
+        posterUrl.style.borderColor = "#2d2626";
     }
 
     if (description.value.trim() === "") {
@@ -665,7 +678,7 @@ editForm.addEventListener('submit', (e) => {
         return;
     } else {
         descriptionCheck.innerText = "";
-        description.style.borderColor = "white";
+        description.style.borderColor = "#2d2626";
     }
 
     const id = +document.getElementById('editMovieId').value;
