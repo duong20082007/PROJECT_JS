@@ -299,7 +299,7 @@ const renderMovies = () => {
                 <td><span class="status-badge ${statusClass}">${statusText}</span></td>
                 <td class="actions">
                     <i class="fa-solid fa-pen" title="Sửa" onclick="openEditModal(${movie.id})"></i>
-                    <i class="fa-solid fa-circle-xmark btn-delete-trigger" title="Xóa" data-id="${movie.id}"></i>
+                    <i class="fa-solid fa-circle-xmark btn-delete-trigger" title="Xóa" onclick="btnDelete(${movie.id})"></i>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -350,7 +350,7 @@ const btnDelete = (id) => {
     }
 }
 
-confirmDeleteBtn.addEventListener("click", btnDelete )
+confirmDeleteBtn.addEventListener("click", btnDelete);
 
 
 let searchInputElement = document.getElementById("searchInput");
@@ -448,6 +448,9 @@ addMovieForm.addEventListener('submit', (e) => {
     const descriptionCheck = document.getElementById('movieDescErr');
     const price = document.getElementById('moviePrice');
     const priceCheck = document.getElementById('moviePriceErr');
+    const status = document.getElementById('movieStatus');
+    const statusCheck = document.getElementById('movieStatusErr');
+
 
     if (title.value.trim() === "") {
         titleCheck.innerText = "Tên phim không được để trống";
@@ -459,7 +462,7 @@ addMovieForm.addEventListener('submit', (e) => {
         title.style.borderColor = "#2d2626";
     }
 
-    if (genres.value === "") {
+    if (genres.value === "default") {
         genresCheck.innerText = "Vui lòng chọn thể loại";
         genresCheck.style.color = "red";
         genres.style.borderColor = "red";
@@ -469,17 +472,7 @@ addMovieForm.addEventListener('submit', (e) => {
         genres.style.borderColor = "#2d2626";
     }
 
-    if (price.value.trim() === "" || Number(price.value) <= 0) {
-        priceCheck.innerText = "Giá vé không được để trống và phải lớn hơn 0";
-        priceCheck.style.color = "red";
-        price.style.borderColor = "red";
-        return;
-    } else {
-        priceCheck.innerText = "";
-        price.style.borderColor = "#2d2626";
-    }
-
-    if (duration.value.trim() === "" || +duration.value <= 0) {
+    if (duration.value.trim() === "" || duration.value <= 0) {
         durationCheck.innerText = "Thời lượng phải là số dương";
         durationCheck.style.color = "red";
         duration.style.borderColor = "red";
@@ -497,6 +490,26 @@ addMovieForm.addEventListener('submit', (e) => {
     } else {
         releasedDateCheck.innerText = "";
         releasedDate.style.borderColor = "#2d2626";
+    }
+
+    if (status.value === "default") {
+        statusCheck.innerText = "Vui lòng chọn trạng thái phim";
+        statusCheck.style.color = "red";
+        status.style.borderColor = "red";
+        return;
+    } else {
+        statusCheck.innerText = "";
+        status.style.borderColor = "#2d2626";
+    }
+
+    if (price.value.trim() === "" || +price.value <= 0) {
+        priceCheck.innerText = "Giá vé không được để trống và phải lớn hơn 0";
+        priceCheck.style.color = "red";
+        price.style.borderColor = "red";
+        return;
+    } else {
+        priceCheck.innerText = "";
+        price.style.borderColor = "#2d2626";
     }
 
     const urlValue = posterUrl.value.trim();
@@ -545,10 +558,10 @@ addMovieForm.addEventListener('submit', (e) => {
     renderMovies();
 
     document.getElementById('movieTitle').value = "";
-    document.getElementById('movieGenres').value = "Hành động, Viễn tưởng"; 
+    document.getElementById('movieGenres').value = "default"; 
     document.getElementById('movieDuration').value = "";
     document.getElementById('movieDate').value = "";
-    document.getElementById('movieStatus').value = "1"; 
+    document.getElementById('movieStatus').value = "default"; 
     document.getElementById('moviePrice').value = "";
     document.getElementById('moviePoster').value = "";
     document.getElementById('movieDesc').value = "";
@@ -569,6 +582,8 @@ const editPoster = document.getElementById('editMoviePoster');
 const editStatus = document.getElementById('editMovieStatus');  
 const editPrice = document.getElementById('editMoviePrice');
 const editPriceCheck = document.getElementById('editMoviePriceErr');
+const editStatusCheck = document.getElementById('editMovieStatusErr');
+
 
 const openEditModal = (id) => {
     const movie = movies.find(m => m.id === id);
@@ -615,6 +630,15 @@ editForm.addEventListener('submit', (e) => {
         title.style.borderColor = "#2d2626";
     }
 
+    if (genres.value === "default") {
+        genresCheck.innerText = "Vui lòng chọn thể loại";
+        genresCheck.style.color = "red";
+        genres.style.borderColor = "red";
+        return;
+    } else {
+        genresCheck.innerText = "";
+        genres.style.borderColor = "#2d2626";
+    }
     if (genres.value === "") {
         genresCheck.innerText = "Vui lòng chọn thể loại";
         genresCheck.style.color = "red";
@@ -625,26 +649,35 @@ editForm.addEventListener('submit', (e) => {
         genres.style.borderColor = "#2d2626";
     }
 
-    if (duration.value.trim() === "" || +duration.value <= 0) {
+    if (duration.value.trim() === "") {
+        durationCheck.innerText = "Thời lượng không được để trống ";
+        durationCheck.style.color = "red";
+        duration.style.borderColor = "red";
+        return;
+    } else {
+        durationCheck.innerText = " ";
+        duration.style.borderColor = "#2d2626";
+    }
+    if (duration.value <= 0) {
         durationCheck.innerText = "Thời lượng phải là số dương";
         durationCheck.style.color = "red";
         duration.style.borderColor = "red";
         return;
     } else {
-        durationCheck.innerText = "";
+        durationCheck.innerText = " ";
         duration.style.borderColor = "#2d2626";
     }
 
-    if (editPrice.value.trim() === "" || +editPrice.value <= 0) {
+    if (editPrice.value.trim() === "" || editPrice.value <= 0) {
         editPriceCheck.innerText = "Giá vé không được để trống và phải hợp lệ";
         editPriceCheck.style.color = "red";
         editPrice.style.borderColor = "red";
         return;
     } else {
-        editPriceCheck.innerText = "";
+        editPriceCheck.innerText = " ";
         editPrice.style.borderColor = "#2d2626";
     }
-
+    
     if (releasedDate.value === "") {
         releasedDateCheck.innerText = "Ngày khởi chiếu không được để trống";
         releasedDateCheck.style.color = "red";
@@ -653,6 +686,16 @@ editForm.addEventListener('submit', (e) => {
     } else {
         releasedDateCheck.innerText = "";
         releasedDate.style.borderColor = "#2d2626";
+    }
+
+    if (editStatus.value === "default") {
+        editStatusCheck.innerText = "Vui lòng chọn trạng thái phim";
+        editStatusCheck.style.color = "red";
+        editStatus.style.borderColor = "red";
+        return;
+    } else {
+        editStatusCheck.innerText = "";
+        editStatus.style.borderColor = "#2d2626";
     }
 
     const urlValue = posterUrl.value.trim();
